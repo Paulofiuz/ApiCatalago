@@ -18,6 +18,12 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpGet]
+    public async Task< ActionResult<IEnumerable<Produto>>> Get2()
+    {
+        return await _context.Produtos.AsNoTracking().ToListAsync();
+    }
+
+    [HttpGet]
     public ActionResult<IEnumerable<Produto>> Get()
     {
         try
@@ -35,12 +41,12 @@ public class ProdutosController : ControllerBase
         }
     }
 
-    [HttpGet("{id:int}", Name = "ObterProduto")]
-    public ActionResult<Produto> Get(int id)
+    [HttpGet("{id:int:min(1)}", Name = "ObterProduto")]
+    public async Task< ActionResult<Produto>> Get(int id)
     {
         try
         {
-            var produto = _context.Produtos.Find(id);
+            var produto = await _context.Produtos.FindAsync(id);
             if (produto is null)
             {
                 return NotFound("Produto não encontrado!");
